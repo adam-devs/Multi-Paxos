@@ -32,10 +32,6 @@ defmodule Replica do
     %{self | requests: MapSet.delete(self.requests, request)}
   end
 
-  defp add_decision(self, decision) do
-    %{self | decisions: MapSet.put(self.decisions, decision)}
-  end
-
   # ____________________________________________________________________________
 
   def start(config, database) do
@@ -45,10 +41,9 @@ defmodule Replica do
       end
 
     self = %{
-      type: :replica,
       config: config,
-      leaders: leaders,
       database: database,
+      leaders: leaders,
       slot_in: 1,
       slot_out: 1,
       requests: MapSet.new(),
@@ -56,38 +51,35 @@ defmodule Replica do
       decisions: MapSet.new()
     }
 
-    self |> next
+    next(self)
   end
 
-  defp next(self) do
+  def next(self) do
     self =
       receive do
         {:CLIENT_REQUEST, c} ->
-          # send(self.config.monitor, {:CLIENT_REQUEST, self.config.node_num})
-
           send(self.config.monitor, {:CLIENT_REQUEST, self.config.node_num})
-          # |> Debug.log("CLIENT_REQUEST: perform #{inspect(c)}.")
-          self |> add_request(c)
+          self = %{self | requests: MapSet.put(self.requests, c)}
+          self
 
         {:DECISION, s, c} ->
-          self
-          # |> Debug.log("DECISION: perform #{inspect(c)} in slot #{s}", :success)
-          |> add_decision({s, c})
-          |> process_pending_decisions
+          self = %{self | decisions: MapSet.put(self.decisions, {s, c})}
+          process_pending_decisions(self)
 
         _unexpected ->
           self
-          # self |> Debug.log("Replica: unexpected message #{inspect(unexpected)}")
       end
 
-    self |> propose
+    propose(self)
   end
 
   defp propose(self) do
-    if outside_current_config_window(self) or MapSet.size(self.requests) == 0,
-      do: self |> next
+    if self.slot_in >= self.slot_out + self.config.window_size or MapSet.size(self.requests) == 0 do
+      next(self)
+      # TODO maybe point of difference here
+    end
 
-    self = self |> try_to_reconfigure
+    self = attempt_reconfig(self)
 
     if slot_in_already_decided?(self), do: self |> increment_slot_in |> next
 
@@ -105,10 +97,6 @@ defmodule Replica do
     |> propose
   end
 
-  defp outside_current_config_window(self) do
-    self.slot_in >= self.slot_out + self.config.window_size
-  end
-
   defp get_next_request(self) do
     first(MapSet.to_list(self.requests))
   end
@@ -124,11 +112,11 @@ defmodule Replica do
     length(decisions_for_s) == 1
   end
 
-  defp try_to_reconfigure(self) do
-    reconfig_slot = self.slot_in - self.config.window_size
+  defp attempt_reconfig(self) do
+    slot = self.slot_in - self.config.window_size
 
     reconfig_decisions =
-      for {^reconfig_slot, {_client, _cid, command}} <- self.decisions,
+      for {^slot, {_client, _cid, command}} <- self.decisions,
           isreconfig?(command),
           do: command
 

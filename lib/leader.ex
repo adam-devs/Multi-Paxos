@@ -1,7 +1,9 @@
-# Adam Alilou (aa1320)
-
+# Szymon Kubica (sk4520) 12 Feb 2023
 defmodule Leader do
+  @compile if Mix.env() == :test, do: :export_all
   def start(config) do
+    ballot_num = {0, config.node_num}
+
     {acceptors, replicas} =
       receive do
         {:BIND, acceptors, replicas} -> {acceptors, replicas}
@@ -9,9 +11,9 @@ defmodule Leader do
 
     self = %{
       config: config,
+      ballot_num: ballot_num,
       acceptors: acceptors,
       replicas: replicas,
-      ballot_num: {0, config.node_num},
       active: false,
       proposals: MapSet.new()
     }
@@ -28,36 +30,33 @@ defmodule Leader do
     self =
       receive do
         {:PROPOSE, s, c} ->
-          if !proposal_exists(self, s) do
-            self = %{self | proposals: MapSet.put(self.proposals, {s, c})}
+          self =
+            if(!proposal_exists(self, s)) do
+              self = %{self | proposals: MapSet.put(self.proposals, {s, c})}
 
-            if self.active do
-              send(self.config.monitor, {:COMMANDER_SPAWNED, self.config.node_num})
+              if self.active do
+                spawn(Commander, :start, [
+                  self.config,
+                  self(),
+                  self.acceptors,
+                  self.replicas,
+                  {self.ballot_num, s, c}
+                ])
 
-              spawn(Commander, :start, [
-                self.config,
-                self(),
-                self.acceptors,
-                self.replicas,
-                {self.ballot_num, s, c}
-              ])
+                send(self.config.monitor, {:COMMANDER_SPAWNED, self.config.node_num})
+              end
 
+              self
+            else
               self
             end
 
-            self
-          end
-
           self
 
-        {:ADOPTED, ^ballot_num, pvals} ->
-          # self = %{self | proposals: update(self.proposals, pmax(self.proposals))}
-          IO.puts("lets make some commanders #{MapSet.size(self.proposals)}")
-          self = update_proposals(self, pmax(pvals))
-          IO.puts("lets make some sexy commanders #{MapSet.size(self.proposals)}")
+        {:ADOPTED, ^ballot_num, pvalues} ->
+          self = update_proposals(self, pmax(pvalues))
 
           for {s, c} <- self.proposals do
-            IO.puts("you shouldn't see me")
             send(self.config.monitor, {:COMMANDER_SPAWNED, self.config.node_num})
 
             spawn(Commander, :start, [
@@ -70,20 +69,18 @@ defmodule Leader do
           end
 
           self = %{self | active: true}
+          self = next(self)
           self
 
-        {:PREEMPTED, {r_, leader_}} ->
-          # {b1, b2} = self.ballot_num
-          # IO.puts("getting preempted or what (#{r_},#{leader_}) vs (#{b1},#{b2})")
-
+        {:PREEMPTED, {value, _leader} = b} ->
           self =
-            if ballot_gt({r_, leader_}, self.ballot_num) do
-              IO.puts("we running it back????")
+            if ballot_eq(b, self.ballot_num) do
               self = %{self | active: false}
-              self = %{self | ballot_num: {r_ + 1, self()}}
+              {_, leader} = self.ballot_num
+              self = %{self | ballot_num: {value + 1, leader}}
 
-              spawn(Scout, :start, [self.config, self(), self.acceptors, ballot_num])
               send(self.config.monitor, {:SCOUT_SPAWNED, self.config.node_num})
+              spawn(Scout, :start, [self.config, self(), self.acceptors, self.ballot_num])
               self
             else
               self
@@ -95,16 +92,7 @@ defmodule Leader do
     next(self)
   end
 
-  # defp update(self, pval) do
-  #   # TODO: complete function
-  #   # proposals
-  #   # {s_, c_}
-
-  #   for {s, c} <- self.proposals do
-  #   end
-  # end
-
-  # Szymon Kubica made the following two functions
+  # TODO: create versions of the following 3 functions
   defp update_proposals(self, max_pvals) do
     remaining_proposals =
       for {s, _c} = proposal <- self.proposals,
@@ -130,22 +118,13 @@ defmodule Leader do
         do: {s, c}
   end
 
-  # defp pmax(pvalues) do
-  #   max = {0, 0, 0}
-  #   b_max = {-1, -1}
-
-  #   for {b, s, c} <- pvalues do
-  #     if ballot_lt(b_max, b) or ballot_eq(b_max, b) do
-  #       b_max = b
-  #       max = {b, s, c}
-  #     end
-  #   end
-
-  #   max
-  # end
-
   defp proposal_exists(self, s) do
-    MapSet.size(MapSet.filter(self.proposals, fn {slot, _} -> slot == s end)) > 0
+    MapSet.size(MapSet.filter(self.proposals, fn {slot, _command} -> slot == s end)) > 0
+  end
+
+  defp exists_proposal_for_slot(self, slot_number) do
+    proposals = for {^slot_number, _c} = proposal <- self.proposals, do: proposal
+    length(proposals) > 0
   end
 
   defp ballot_lt(ballot, ballot_) do
@@ -153,13 +132,6 @@ defmodule Leader do
     {a2, b2} = ballot_
 
     a1 < a2 or (a1 == a2 and b1 < b2)
-  end
-
-  defp ballot_gt(ballot, ballot_) do
-    {a1, b1} = ballot
-    {a2, b2} = ballot_
-
-    a1 > a2 or (a1 == a2 and b1 > b2)
   end
 
   defp ballot_eq(ballot, ballot2) do

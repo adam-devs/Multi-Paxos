@@ -1,6 +1,6 @@
 # Adam Alilou (aa1320)
 
-defmodule Commander do
+defmodule Comdfmander do
   def start(config, leader, acceptors, replicas, msg) do
     self = %{
       config: config,

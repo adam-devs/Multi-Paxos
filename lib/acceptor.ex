@@ -4,23 +4,19 @@ defmodule Acceptor do
   def start(config) do
     self = %{
       config: config,
-      ballot_num: {-1, 0},
+      ballot_num: {-10, -10},
       accepted: MapSet.new()
     }
 
     next(self)
   end
 
-  defp next(self) do
+  def next(self) do
     self =
       receive do
         {:p1a, leader, b} ->
-          # {x1, y1} = b
-          # {x2, y2} = b
-          # IO.puts("BIG NEWS b: #{x1},#{y1}| ballot_num:#{x2},#{y2} ")
-
           self =
-            if b > self.ballot_num do
+            if ballot_gt(b, self.ballot_num) do
               self = %{self | ballot_num: b}
               self
             else
@@ -32,7 +28,7 @@ defmodule Acceptor do
 
         {:p2a, leader, {b, s, c}} ->
           self =
-            if b == self.ballot_num do
+            if ballot_eq(b, self.ballot_num) do
               self = %{self | accepted: MapSet.put(self.accepted, {b, s, c})}
               self
             else
@@ -44,5 +40,19 @@ defmodule Acceptor do
       end
 
     next(self)
+  end
+
+  defp ballot_gt(ballot, ballot_) do
+    {a1, b1} = ballot
+    {a2, b2} = ballot_
+
+    a1 > a2 or (a1 == a2 and b1 > b2)
+  end
+
+  defp ballot_eq(ballot, ballot2) do
+    {a1, b1} = ballot
+    {a2, b2} = ballot2
+
+    a1 == a2 and b1 == b2
   end
 end

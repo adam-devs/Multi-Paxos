@@ -41,7 +41,7 @@ defmodule Configuration do
   def params(:default) do
     %{
       # max requests each client will make
-      max_requests: 5,
+      max_requests: 500,
       # time (ms) to sleep before sending new request
       client_sleep: 2,
       # time (ms) to stop sending further requests
@@ -86,14 +86,14 @@ defmodule Configuration do
 
   # params :crashes
 
-  def params(:tenk) do
-    Map.merge(
-      params(:default),
-      %{
-        # redact definitions
-      }
-    )
-  end
+  # def params(:tenk) do
+  #   Map.merge(
+  #     params(:default),
+  #     %{
+  #       # redact definitions
+  #     }
+  #   )
+  # end
 
   # params :tenk
 

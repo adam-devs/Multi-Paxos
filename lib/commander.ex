@@ -1,11 +1,12 @@
-# Szymon Kubica (sk4520) 12 Feb 2023
+# Adam Alilou (aa1320)
+
 defmodule Commander do
-  def start(config, l, acceptors, replicas, pvalue) do
+  def start(config, leader, acceptors, replicas, pvalue) do
     waitfor = acceptors
 
     self = %{
       config: config,
-      leader: l,
+      leader: leader,
       waitfor: waitfor,
       acceptors: acceptors,
       replicas: replicas,
@@ -16,43 +17,37 @@ defmodule Commander do
       send(acceptor, {:p2a, self(), pvalue})
     end
 
-    self |> next
+    next(self)
   end
 
   def next(self) do
-    {ballot_num, s, c} = self.pvalue
+    {b1, s, c} = self.pvalue
 
     receive do
-      {:p2b, a, b} ->
-        # self |> log("Received p2b message for ballot #{inspect(b)}")
+      {:p2b, a, b2} ->
+        if ballot_eq(b2, b1) do
+          self = %{self | waitfor: List.delete(self.waitfor, a)}
 
-        if b == ballot_num do
-          self = self |> remove_acceptor_from_waitfor(a)
-
-          if majority_responded?(self) do
-            # IO.puts("please just print this #{length(self.replicas)}")
-            # self |> log("Received majority of responses for pvalue: #{inspect(self.pvalue)}")
-
-            for replica <- self.replicas do
-              send(replica, {:DECISION, s, c})
+          if length(self.waitfor) < (length(self.acceptors) + 1) / 2 do
+            for r <- self.replicas do
+              send(r, {:DECISION, s, c})
             end
 
             send(self.config.monitor, {:COMMANDER_FINISHED, self.config.node_num})
           else
-            self |> next
+            next(self)
           end
         else
-          send(self.leader, {:PREEMPTED, b})
+          send(self.leader, {:PREEMPTED, b2})
           send(self.config.monitor, {:COMMANDER_FINISHED, self.config.node_num})
         end
     end
   end
 
-  def majority_responded?(self) do
-    length(self.waitfor) < div(length(self.acceptors) + 1, 2)
-  end
+  defp ballot_eq(ballot, ballot2) do
+    {a1, b1} = ballot
+    {a2, b2} = ballot2
 
-  def remove_acceptor_from_waitfor(self, a) do
-    %{self | waitfor: List.delete(self.waitfor, a)}
+    a1 == a2 and b1 == b2
   end
 end
