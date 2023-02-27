@@ -96,8 +96,9 @@ defmodule Leader do
     remaining_proposals =
       for {s, _c} = proposal <- self.proposals,
           not update_exists?(s, max_pvals),
-          into: MapSet.new(),
-          do: proposal
+          into: MapSet.new() do
+        proposal
+      end
 
     %{self | proposals: MapSet.union(max_pvals, remaining_proposals)}
   end
@@ -110,11 +111,13 @@ defmodule Leader do
   defp pmax(pvalues) do
     for {b, s, c} <- pvalues,
         Enum.all?(
-          for {b1, ^s, _c1} <- pvalues,
-              do: ballot_lt(b1, b) or ballot_eq(b1, b)
+          for {b1, ^s, _c1} <- pvalues do
+            ballot_lt(b1, b) or ballot_eq(b1, b)
+          end
         ),
-        into: MapSet.new(),
-        do: {s, c}
+        into: MapSet.new() do
+      {s, c}
+    end
   end
 
   defp proposal_exists(self, s) do
