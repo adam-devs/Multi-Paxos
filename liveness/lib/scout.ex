@@ -43,8 +43,8 @@ defmodule Scout do
   end
 
   defp ballot_eq(ballot1, ballot2) do
-    {a1, b1, _} = ballot1
-    {a2, b2, _} = ballot2
+    {a1, b1, _, _} = ballot1
+    {a2, b2, _, _} = ballot2
 
     a1 == a2 and b1 == b2
   end

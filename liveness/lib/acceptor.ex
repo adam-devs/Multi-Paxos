@@ -2,7 +2,7 @@
 
 defmodule Acceptor do
   def start(config) do
-    ballot_num = {0, 0, self()}
+    ballot_num = {0, 0, self(), 0}
 
     self = %{
       config: config,
@@ -47,15 +47,15 @@ defmodule Acceptor do
   end
 
   defp ballot_gt(ballot1, ballot2) do
-    {a1, b1, _} = ballot1
-    {a2, b2, _} = ballot2
+    {a1, b1, _, _} = ballot1
+    {a2, b2, _, _} = ballot2
 
     a1 > a2 or (a1 == a2 and b1 > b2)
   end
 
   defp ballot_eq(ballot1, ballot2) do
-    {a1, b1, _} = ballot1
-    {a2, b2, _} = ballot2
+    {a1, b1, _, _} = ballot1
+    {a2, b2, _, _} = ballot2
 
     a1 == a2 and b1 == b2
   end
