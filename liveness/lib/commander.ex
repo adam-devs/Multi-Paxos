@@ -35,6 +35,7 @@ defmodule Commander do
               send(r, {:DECISION, s, c})
             end
 
+            send(self.leader, {:PROPOSAL_CHOSEN})
             send(self.config.monitor, {:COMMANDER_FINISHED, self.config.node_num})
           else
             next(self)

@@ -30,7 +30,11 @@ defmodule Configuration do
         node_location: Helper.node_string(),
         # for ordering output lines
         line_num: 0,
-        max_response_time: 50
+        max_response_time: 50,
+        min_timeout: 10,
+        max_timeout: 200,
+        decrease_amount: 20,
+        timeout_factor: 2
       }
     )
   end

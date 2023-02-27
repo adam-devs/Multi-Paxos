@@ -15,7 +15,8 @@ defmodule Leader do
       acceptors: acceptors,
       replicas: replicas,
       active: false,
-      proposals: MapSet.new()
+      proposals: MapSet.new(),
+      timeout: config.min_timeout
     }
 
     spawn(Scout, :start, [self.config, self(), self.acceptors, self.ballot_num])
@@ -77,6 +78,11 @@ defmodule Leader do
         {:PREEMPTED, {value, _preempting_leader, leader_PID, _timeout} = b1} ->
           # A scout or commander has told us that some acceptor has adopted a higher ballot number
 
+          self = %{
+            self
+            | timeout: min(self.timeout * self.config.timeout_factor, self.timeout)
+          }
+
           # Ping the leader of the ballot that has preempted us until they finish
           monitor_leader(self, leader_PID)
 
@@ -101,8 +107,13 @@ defmodule Leader do
 
           send(leader, {:PING_RESPONSE, self()})
           self
-      after
-        elem(ballot_num, 3) ->
+
+        {:PROPOSAL_CHOSEN} ->
+          self = %{
+            self
+            | timeout: max(self.timeout - self.config.decrease_amount, self.config.min_timeout)
+          }
+
           self
       end
 
@@ -159,6 +170,12 @@ defmodule Leader do
       receive do
         {:PING_RESPONSE, ^other_leader} ->
           :os.system_time(:millisecond) - time
+          # after
+          #   elem(self.ballot_num, 3) ->
+          #     self
+      after
+        self.timeout ->
+          self
       end
 
     if time < self.config.max_response_time do
