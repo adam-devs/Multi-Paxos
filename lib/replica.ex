@@ -74,10 +74,10 @@ defmodule Replica do
   end
 
   defp propose(self) do
-    if self.slot_in >= self.slot_out + self.config.window_size or MapSet.size(self.requests) == 0 do
-      next(self)
-      # TODO maybe point of difference here
-    end
+    if self.slot_in >= self.slot_out + self.config.window_size or MapSet.size(self.requests) == 0,
+      do: next(self)
+
+    # TODO maybe point of difference here
 
     self = attempt_reconfig(self)
 
@@ -128,22 +128,14 @@ defmodule Replica do
   end
 
   defp perform(self, {client, cid, op} = command) do
-    # self = self |> Debug.log("Perform: #{inspect(command)} in slot #{self.slot_out}")
-
     self =
       if not already_processed?(self, command) or isreconfig?(op) do
         send(self.database, {:EXECUTE, op})
         send(client, {:CLIENT_RESPONSE, cid, command})
 
         self
-
-        # |> Debug.log("Command sent to DB: #{inspect(command)} in slot #{self.slot_out}", :success)
       else
         self
-        # |> Debug.log(
-        #   "Command already processed: #{inspect(command)} in slot #{self.slot_out}",
-        #   :error
-        # )
       end
 
     self |> increment_slot_out
@@ -156,12 +148,6 @@ defmodule Replica do
 
     if already_processed,
       do: self
-
-    # |> Debug.log(
-    #   "Already processed: #{inspect(slots_filled)} \n
-    #   --> Current slot out: #{self.slot_out}",
-    #   :error
-    # )
 
     already_processed
   end
@@ -195,12 +181,6 @@ defmodule Replica do
           self = if c != c2, do: self |> add_request(c2), else: self
 
           self
-          # |> Debug.log(
-          #   "Comparing commands: \n" <>
-          #     "--> #{inspect(c)} \n" <>
-          #     "--> #{inspect(c2)} \n" <>
-          #     "--> equal: #{c == c2}"
-          # )
         else
           self
         end
@@ -220,5 +200,11 @@ defmodule Replica do
 
   defp get_proposals_for_slot(self, s) do
     for {^s, _c} = proposal <- self.proposals, do: proposal
+  end
+
+  defp slot_in_not_decided?(self) do
+    slot_in = self.slot_in
+    decisions_for_slot_in = for {^slot_in, _c} = decision <- self.decisions, do: decision
+    length(decisions_for_slot_in) == 0
   end
 end

@@ -36,15 +36,14 @@ defmodule Scout do
           # )
 
           if length(self.waitfor) < (length(self.acceptors) + 1) / 2 do
-            send(self.config.monitor, {:SCOUT_FINISHED, self.config.node_num})
             send(self.leader, {:ADOPTED, self.ballot_num, self.pvalues})
+            send(self.config.monitor, {:SCOUT_FINISHED, self.config.node_num})
           else
             next(self)
           end
         else
-          send(self.config.monitor, {:SCOUT_FINISHED, self.config.node_num})
           send(self.leader, {:PREEMPTED, b1})
-          # exit(finished: "preempted")
+          send(self.config.monitor, {:SCOUT_FINISHED, self.config.node_num})
         end
     end
   end

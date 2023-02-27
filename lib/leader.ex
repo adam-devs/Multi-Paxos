@@ -1,6 +1,5 @@
-# Szymon Kubica (sk4520) 12 Feb 2023
+# Adam Alilou (aa1320)
 defmodule Leader do
-  @compile if Mix.env() == :test, do: :export_all
   def start(config) do
     ballot_num = {0, config.node_num}
 
@@ -57,8 +56,6 @@ defmodule Leader do
           self = update_proposals(self, pmax(pvalues))
 
           for {s, c} <- self.proposals do
-            send(self.config.monitor, {:COMMANDER_SPAWNED, self.config.node_num})
-
             spawn(Commander, :start, [
               self.config,
               self(),
@@ -66,6 +63,8 @@ defmodule Leader do
               self.replicas,
               {self.ballot_num, s, c}
             ])
+
+            send(self.config.monitor, {:COMMANDER_SPAWNED, self.config.node_num})
           end
 
           self = %{self | active: true}
@@ -79,8 +78,8 @@ defmodule Leader do
               {_, leader} = self.ballot_num
               self = %{self | ballot_num: {value + 1, leader}}
 
-              send(self.config.monitor, {:SCOUT_SPAWNED, self.config.node_num})
               spawn(Scout, :start, [self.config, self(), self.acceptors, self.ballot_num])
+              send(self.config.monitor, {:SCOUT_SPAWNED, self.config.node_num})
               self
             else
               self
@@ -120,11 +119,6 @@ defmodule Leader do
 
   defp proposal_exists(self, s) do
     MapSet.size(MapSet.filter(self.proposals, fn {slot, _command} -> slot == s end)) > 0
-  end
-
-  defp exists_proposal_for_slot(self, slot_number) do
-    proposals = for {^slot_number, _c} = proposal <- self.proposals, do: proposal
-    length(proposals) > 0
   end
 
   defp ballot_lt(ballot, ballot_) do

@@ -4,7 +4,7 @@ defmodule Acceptor do
   def start(config) do
     self = %{
       config: config,
-      ballot_num: {-10, -10},
+      ballot_num: {0, 0},
       accepted: MapSet.new()
     }
 
