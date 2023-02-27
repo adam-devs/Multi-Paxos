@@ -1,4 +1,5 @@
 # Adam Alilou (aa1320)
+
 defmodule Leader do
   def start(config) do
     ballot_num = {0, config.node_num}
@@ -29,6 +30,7 @@ defmodule Leader do
     self =
       receive do
         {:PROPOSE, s, c} ->
+          # A replica proposes a slot number for a command
           self =
             if(!proposal_exists(self, s)) do
               self = %{self | proposals: MapSet.put(self.proposals, {s, c})}
@@ -53,7 +55,8 @@ defmodule Leader do
           self
 
         {:ADOPTED, ^ballot_num, pvalues} ->
-          self = update_proposals(self, pmax(pvalues))
+          # A scout has told us that the majority of acceptors have adopted the ballot number
+          self = update(self, pmax(pvalues))
 
           for {s, c} <- self.proposals do
             spawn(Commander, :start, [
@@ -71,9 +74,10 @@ defmodule Leader do
           self = next(self)
           self
 
-        {:PREEMPTED, {value, _leader} = b} ->
+        {:PREEMPTED, {value, _leader} = b1} ->
+          # A scout or commander has told us that some acceptor has adopted a higher ballot number
           self =
-            if ballot_eq(b, self.ballot_num) do
+            if ballot_eq(b1, self.ballot_num) do
               self = %{self | active: false}
               {_, leader} = self.ballot_num
               self = %{self | ballot_num: {value + 1, leader}}
@@ -91,37 +95,32 @@ defmodule Leader do
     next(self)
   end
 
-  # TODO: create versions of the following 3 functions
-  defp update_proposals(self, max_pvals) do
-    remaining_proposals =
+  defp update(self, max) do
+    # <| triangle update function
+    proposals =
       for {s, _c} = proposal <- self.proposals,
-          not update_exists?(s, max_pvals),
+          not proposal_exists(s, max),
           into: MapSet.new() do
         proposal
       end
 
-    %{self | proposals: MapSet.union(max_pvals, remaining_proposals)}
+    %{self | proposals: MapSet.union(max, proposals)}
   end
 
-  defp update_exists?(slot_number, pvalues) do
-    updates = for {^slot_number, _c} = pvalue <- pvalues, do: pvalue
-    length(updates) != 0
+  defp proposal_exists(self, s) do
+    MapSet.size(MapSet.filter(self.proposals, fn {slot, _command} -> slot == s end)) > 0
   end
 
-  defp pmax(pvalues) do
-    for {b, s, c} <- pvalues,
+  defp pmax(pvals) do
+    for {b, s, c} <- pvals,
         Enum.all?(
-          for {b1, ^s, _c1} <- pvalues do
+          for {b1, ^s, _} <- pvals do
             ballot_lt(b1, b) or ballot_eq(b1, b)
           end
         ),
         into: MapSet.new() do
       {s, c}
     end
-  end
-
-  defp proposal_exists(self, s) do
-    MapSet.size(MapSet.filter(self.proposals, fn {slot, _command} -> slot == s end)) > 0
   end
 
   defp ballot_lt(ballot, ballot_) do

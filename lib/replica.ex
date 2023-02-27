@@ -23,38 +23,28 @@ defmodule Replica do
     next(self)
   end
 
-  def next(self) do
-    self =
-      receive do
-        {:CLIENT_REQUEST, c} ->
-          send(self.config.monitor, {:CLIENT_REQUEST, self.config.node_num})
-          self = %{self | requests: MapSet.put(self.requests, c)}
-          self
-
-        {:DECISION, s, c} ->
-          self = %{self | decisions: MapSet.put(self.decisions, {s, c})}
-          process_pending_decisions(self)
-
-        _unexpected ->
-          self
-      end
-
-    propose(self)
-  end
-
   defp propose(self) do
+    # Since propose is called from next() if the conditions of the 'while loop' aren't met, go to next
     if self.slot_in >= self.slot_out + self.config.window_size or MapSet.size(self.requests) == 0 do
       next(self)
     end
 
+    # If the command is within the window and is a reconfiguration command the apply the reconfiguration
     self = attempt_reconfig(self)
 
-    if slot_in_already_decided?(self) do
+    slot = self.slot_in
+
+    qualifying_decisions =
+      for {^slot, _c} = decision <- self.decisions do
+        decision
+      end
+
+    if length(qualifying_decisions) == 1 do
       self = %{self | slot_in: self.slot_in + 1}
       next(self)
     end
 
-    c = get_next_request(self)
+    c = first(MapSet.to_list(self.requests))
 
     for l <- self.leaders do
       send(l, {:PROPOSE, self.slot_in, c})
@@ -63,34 +53,17 @@ defmodule Replica do
     self = %{self | requests: MapSet.delete(self.requests, c)}
     self = %{self | proposals: MapSet.put(self.proposals, {self.slot_in, c})}
     self = %{self | slot_in: self.slot_in + 1}
+    # 'While loop' restarts
     propose(self)
-  end
-
-  defp get_next_request(self) do
-    first(MapSet.to_list(self.requests))
-  end
-
-  defp slot_in_already_decided?(self) do
-    s = self.slot_in
-
-    decisions_for_s =
-      for {^s, _c} = decision <- self.decisions do
-        decision
-      end
-
-    if length(decisions_for_s) > 1 do
-    end
-
-    length(decisions_for_s) == 1
   end
 
   defp attempt_reconfig(self) do
     slot = self.slot_in - self.config.window_size
 
     reconfig_decisions =
-      for {^slot, {_client, _cid, command}} <- self.decisions,
-          isreconfig?(command) do
-        command
+      for {^slot, {_, _, op}} <- self.decisions,
+          isreconfig(op) do
+        op
       end
 
     if length(reconfig_decisions) == 1 do
@@ -101,11 +74,26 @@ defmodule Replica do
     end
   end
 
-  defp perform(self, {client, cid, op} = command) do
+  defp isreconfig(op) do
+    # Is op a command to reconfigure the leaders
+    case op do
+      %{leaders: _leaders} -> true
+      _ -> false
+    end
+  end
+
+  defp perform(self, {k, cid, op}) do
+    c = {k, cid, op}
+
+    performed =
+      for {s, ^c} <- self.decisions, s < self.slot_out do
+        s
+      end
+
     self =
-      if not already_performed(self, command) or isreconfig?(op) do
+      if length(performed) == 0 or isreconfig(op) do
+        send(k, {:CLIENT_RESPONSE, cid, c})
         send(self.database, {:EXECUTE, op})
-        send(client, {:CLIENT_RESPONSE, cid, command})
 
         self
       else
@@ -116,45 +104,53 @@ defmodule Replica do
     self
   end
 
-  defp already_performed(self, command) do
-    slots_filled =
-      for {s, ^command} <- self.decisions, s < self.slot_out do
-        s
+  def next(self) do
+    self =
+      receive do
+        {:CLIENT_REQUEST, c} ->
+          send(self.config.monitor, {:CLIENT_REQUEST, self.config.node_num})
+          self = %{self | requests: MapSet.put(self.requests, c)}
+          self
+
+        {:DECISION, s, c} ->
+          self = %{self | decisions: MapSet.put(self.decisions, {s, c})}
+          # While we have a command with slot_out in decisions
+          self = while_decision(self)
+          self
+
+        _else ->
+          self
       end
 
-    already_processed = length(slots_filled) != 0
-
-    if already_processed do
-      self
-    end
-
-    already_processed
+    propose(self)
   end
 
-  defp isreconfig?(op) do
-    case op do
-      %{leaders: _leaders} -> true
-      _ -> false
-    end
-  end
+  defp while_decision(self) do
+    slot_out = self.slot_out
 
-  defp process_pending_decisions(self) do
-    decisions_for_slot_out = get_pending_decisions(self)
+    qualifying_decisions =
+      for {^slot_out, _c} = d <- self.decisions, into: MapSet.new() do
+        d
+      end
 
-    if MapSet.size(decisions_for_slot_out) > 0 do
-      {slot_out, c} = first(MapSet.to_list(decisions_for_slot_out))
+    if MapSet.size(qualifying_decisions) > 0 do
+      {slot_out, c} = first(MapSet.to_list(qualifying_decisions))
 
-      proposals_for_slot_out = self |> get_proposals_for_slot(slot_out)
+      qualifying_proposals =
+        for {^slot_out, _c} = proposal <- self.proposals do
+          proposal
+        end
 
-      if length(proposals_for_slot_out) > 1 do
+      if length(qualifying_proposals) > 1 do
         Process.exit(self(), :normal)
       end
 
       self =
-        if length(proposals_for_slot_out) == 1 do
-          {slot_out, c2} = first(proposals_for_slot_out)
+        if length(qualifying_proposals) == 1 do
+          {slot_out, c2} = first(qualifying_proposals)
           self = %{self | proposals: MapSet.delete(self.proposals, {slot_out, c2})}
 
+          # If we have a proposal in the same slot as this decision, move it to requests
           self =
             if c != c2 do
               self = %{self | requests: MapSet.put(self.requests, c2)}
@@ -169,24 +165,10 @@ defmodule Replica do
         end
 
       self = perform(self, c)
-      self = process_pending_decisions(self)
+      self = while_decision(self)
       self
     else
       self
-    end
-  end
-
-  defp get_pending_decisions(self) do
-    slot_out = self.slot_out
-
-    for {^slot_out, _c} = d <- self.decisions, into: MapSet.new() do
-      d
-    end
-  end
-
-  defp get_proposals_for_slot(self, s) do
-    for {^s, _c} = proposal <- self.proposals do
-      proposal
     end
   end
 end

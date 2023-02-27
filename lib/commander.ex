@@ -26,8 +26,10 @@ defmodule Commander do
     receive do
       {:p2b, a, b2} ->
         if ballot_eq(b2, b1) do
+          # If I've received the ballot_num I was waiting for, remove the acceptor from the list
           self = %{self | waitfor: List.delete(self.waitfor, a)}
 
+          # If I have a majority of acceptors then I can send the replicas the command
           if length(self.waitfor) < (length(self.acceptors) + 1) / 2 do
             for r <- self.replicas do
               send(r, {:DECISION, s, c})
@@ -38,6 +40,7 @@ defmodule Commander do
             next(self)
           end
         else
+          # Tell the leader that I've received a different (must be larger) ballot number
           send(self.leader, {:PREEMPTED, b2})
           send(self.config.monitor, {:COMMANDER_FINISHED, self.config.node_num})
         end
