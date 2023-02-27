@@ -84,9 +84,9 @@ defmodule Configuration do
     )
   end
 
-  # params :crashes
+  # params(:crashes)
 
-  # def params(:tenk) do
+  # def params(:10k) do
   #   Map.merge(
   #     params(:default),
   #     %{
@@ -95,7 +95,7 @@ defmodule Configuration do
   #   )
   # end
 
-  # params :tenk
+  # params :10k
 
   # redact params functions...
 end
