@@ -44,15 +44,15 @@ defmodule Acceptor do
     next(self)
   end
 
-  defp ballot_gt(ballot, ballot_) do
-    {a1, b1} = ballot
-    {a2, b2} = ballot_
+  defp ballot_gt(ballot1, ballot2) do
+    {a1, b1} = ballot1
+    {a2, b2} = ballot2
 
     a1 > a2 or (a1 == a2 and b1 > b2)
   end
 
-  defp ballot_eq(ballot, ballot2) do
-    {a1, b1} = ballot
+  defp ballot_eq(ballot1, ballot2) do
+    {a1, b1} = ballot1
     {a2, b2} = ballot2
 
     a1 == a2 and b1 == b2
