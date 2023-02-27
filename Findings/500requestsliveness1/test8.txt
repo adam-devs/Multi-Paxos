@@ -1,0 +1,73 @@
+mix clean
+mix compile
+Compiling 13 files (.ex)
+Generated multi_paxos app
+--> Starting Multipaxos at multipaxos_50_adama@127.0.0.1 (192.168.68.108)
+  client_sleep 2
+  client_stop 15000
+  crash_servers %{}
+  debug_level 2
+  line_num 0
+  max_amount 1000
+  max_requests 500
+  max_response_time 50
+  monitor #PID<0.145.0>
+  n_accounts 100
+  n_clients 5
+  n_servers 5
+  node_location "multipaxos_50_adama@127.0.0.1 (192.168.68.108)"
+  node_name "Multipaxos"
+  node_num ""
+  node_suffix "50_adama@127.0.0.1"
+  node_type "Multipaxos"
+  param_setup :default
+  print_after 1000
+  send_policy :round_robin
+  start_function :cluster_start
+  timelimit 15000
+  verbose_logging [:replica, :leader, :commander]
+  window_size 10
+--> Starting Server1 at server1_50_adama@127.0.0.1 (192.168.68.108)
+--> Starting Server2 at server2_50_adama@127.0.0.1 (192.168.68.108)
+--> Starting Server3 at server3_50_adama@127.0.0.1 (192.168.68.108)
+--> Starting Server4 at server4_50_adama@127.0.0.1 (192.168.68.108)
+--> Starting Server5 at server5_50_adama@127.0.0.1 (192.168.68.108)
+--> Starting Client1 at client1_50_adama@127.0.0.1 (192.168.68.108)
+--> Starting Client2 at client2_50_adama@127.0.0.1 (192.168.68.108)
+--> Starting Client3 at client3_50_adama@127.0.0.1 (192.168.68.108)
+--> Starting Client4 at client4_50_adama@127.0.0.1 (192.168.68.108)
+--> Starting Client5 at client5_50_adama@127.0.0.1 (192.168.68.108)
+time = 1000 client requests seen = [{1, 261}, {2, 262}, {3, 267}, {4, 266}, {5, 265}]
+time = 1000     db requests done = [{1, 1142}, {2, 1145}, {3, 1145}, {4, 1145}, {5, 1145}]
+time = 1000            scouts up = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 1000          scouts down = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 1000        commanders up = [{4, 2}, {5, 1151}]
+time = 1000      commanders down = [{4, 2}, {5, 1149}]
+
+  Client 1 going to sleep, sent = 500
+  Client 3 going to sleep, sent = 500
+  Client 5 going to sleep, sent = 500
+  Client 2 going to sleep, sent = 500
+  Client 4 going to sleep, sent = 500
+time = 2000 client requests seen = [{1, 500}, {2, 500}, {3, 500}, {4, 500}, {5, 500}]
+time = 2000     db requests done = [{1, 2209}, {2, 2198}, {3, 2221}, {4, 2209}, {5, 2220}]
+time = 2000            scouts up = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 2000          scouts down = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 2000        commanders up = [{4, 2}, {5, 2229}]
+time = 2000      commanders down = [{4, 2}, {5, 2228}]
+
+time = 3000 client requests seen = [{1, 500}, {2, 500}, {3, 500}, {4, 500}, {5, 500}]
+time = 3000     db requests done = [{1, 2499}, {2, 2499}, {3, 2499}, {4, 2499}, {5, 2499}]
+time = 3000            scouts up = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 3000          scouts down = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 3000        commanders up = [{4, 2}, {5, 2499}]
+time = 3000      commanders down = [{4, 2}, {5, 2499}]
+
+time = 4000 client requests seen = [{1, 500}, {2, 500}, {3, 500}, {4, 500}, {5, 500}]
+time = 4000     db requests done = [{1, 2499}, {2, 2499}, {3, 2499}, {4, 2499}, {5, 2499}]
+time = 4000            scouts up = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 4000          scouts down = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 4000        commanders up = [{4, 2}, {5, 2499}]
+time = 4000      commanders down = [{4, 2}, {5, 2499}]
+
+^C

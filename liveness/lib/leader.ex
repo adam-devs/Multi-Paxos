@@ -80,7 +80,8 @@ defmodule Leader do
 
           self = %{
             self
-            | timeout: min(self.timeout * self.config.timeout_factor, self.timeout)
+            | timeout:
+                min(round(self.timeout * self.config.timeout_factor), self.config.max_timeout)
           }
 
           # Ping the leader of the ballot that has preempted us until they finish
@@ -170,9 +171,6 @@ defmodule Leader do
       receive do
         {:PING_RESPONSE, ^other_leader} ->
           :os.system_time(:millisecond) - time
-          # after
-          #   elem(self.ballot_num, 3) ->
-          #     self
       after
         self.timeout ->
           self

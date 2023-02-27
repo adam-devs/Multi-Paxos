@@ -1,0 +1,352 @@
+mix clean
+mix compile
+Compiling 13 files (.ex)
+Generated multi_paxos app
+--> Starting Multipaxos at multipaxos_56_adama@127.0.0.1 (192.168.68.108)
+  client_sleep 2
+  client_stop 20000
+  crash_servers %{}
+  debug_level 2
+  line_num 0
+  max_amount 1000
+  max_requests 2000
+  monitor #PID<0.145.0>
+  n_accounts 100
+  n_clients 5
+  n_servers 5
+  node_location "multipaxos_56_adama@127.0.0.1 (192.168.68.108)"
+  node_name "Multipaxos"
+  node_num ""
+  node_suffix "56_adama@127.0.0.1"
+  node_type "Multipaxos"
+  param_setup :default
+  print_after 1000
+  send_policy :round_robin
+  start_function :cluster_start
+  timelimit 60000
+  verbose_logging [:replica, :leader, :commander]
+  window_size 10
+--> Starting Server1 at server1_56_adama@127.0.0.1 (192.168.68.108)
+--> Starting Server2 at server2_56_adama@127.0.0.1 (192.168.68.108)
+--> Starting Server3 at server3_56_adama@127.0.0.1 (192.168.68.108)
+--> Starting Server4 at server4_56_adama@127.0.0.1 (192.168.68.108)
+--> Starting Server5 at server5_56_adama@127.0.0.1 (192.168.68.108)
+--> Starting Client1 at client1_56_adama@127.0.0.1 (192.168.68.108)
+--> Starting Client2 at client2_56_adama@127.0.0.1 (192.168.68.108)
+--> Starting Client3 at client3_56_adama@127.0.0.1 (192.168.68.108)
+--> Starting Client4 at client4_56_adama@127.0.0.1 (192.168.68.108)
+--> Starting Client5 at client5_56_adama@127.0.0.1 (192.168.68.108)
+time = 1000 client requests seen = [{1, 284}, {2, 281}, {3, 282}, {4, 284}, {5, 283}]
+time = 1000     db requests done = [{1, 1085}, {2, 1085}, {3, 1068}, {4, 1076}, {5, 1085}]
+time = 1000            scouts up = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 1000          scouts down = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 1000        commanders up = [{3, 1086}, {4, 1086}, {5, 1093}]
+time = 1000      commanders down = [{3, 1085}, {4, 1086}, {5, 1085}]
+
+time = 2000 client requests seen = [{1, 620}, {2, 620}, {3, 623}, {4, 606}, {5, 620}]
+time = 2000     db requests done = [{1, 1928}, {2, 1932}, {3, 1928}, {4, 1898}, {5, 1930}]
+time = 2000            scouts up = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 2000          scouts down = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 2000        commanders up = [{3, 1934}, {4, 1931}, {5, 1938}]
+time = 2000      commanders down = [{3, 1934}, {4, 1931}, {5, 1934}]
+
+time = 3000 client requests seen = [{1, 927}, {2, 926}, {3, 930}, {4, 931}, {5, 927}]
+time = 3000     db requests done = [{1, 2473}, {2, 2472}, {3, 2474}, {4, 2472}, {5, 2472}]
+time = 3000            scouts up = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 3000          scouts down = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 3000        commanders up = [{3, 2479}, {4, 2483}, {5, 2483}]
+time = 3000      commanders down = [{3, 2479}, {4, 2483}, {5, 2479}]
+
+time = 4000 client requests seen = [{1, 1152}, {2, 1127}, {3, 1212}, {4, 1206}, {5, 1205}]
+time = 4000     db requests done = [{1, 2873}, {2, 2828}, {3, 2960}, {4, 2954}, {5, 2955}]
+time = 4000            scouts up = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 4000          scouts down = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 4000        commanders up = [{3, 2969}, {4, 2958}, {5, 2965}]
+time = 4000      commanders down = [{3, 2965}, {4, 2958}, {5, 2965}]
+
+time = 5000 client requests seen = [{1, 1612}, {2, 1607}, {3, 1564}, {4, 1602}, {5, 1610}]
+time = 5000     db requests done = [{1, 3521}, {2, 3516}, {3, 3457}, {4, 3507}, {5, 3517}]
+time = 5000            scouts up = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 5000          scouts down = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 5000        commanders up = [{3, 3502}, {4, 3528}, {5, 3525}]
+time = 5000      commanders down = [{3, 3502}, {4, 3528}, {5, 3521}]
+
+time = 6000 client requests seen = [{1, 1809}, {2, 1852}, {3, 1775}, {4, 1815}, {5, 1838}]
+time = 6000     db requests done = [{1, 3799}, {2, 3857}, {3, 3727}, {4, 3799}, {5, 3844}]
+time = 6000            scouts up = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 6000          scouts down = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 6000        commanders up = [{3, 3866}, {4, 3866}, {5, 3866}]
+time = 6000      commanders down = [{3, 3866}, {4, 3866}, {5, 3859}]
+
+  Client 4 going to sleep, sent = 2000
+  Client 1 going to sleep, sent = 2000
+  Client 2 going to sleep, sent = 2000
+  Client 5 going to sleep, sent = 2000
+  Client 3 going to sleep, sent = 2000
+time = 7000 client requests seen = [{1, 2000}, {2, 2000}, {3, 1989}, {4, 1995}, {5, 2000}]
+time = 7000     db requests done = [{1, 4172}, {2, 4180}, {3, 4032}, {4, 4088}, {5, 4172}]
+time = 7000            scouts up = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 7000          scouts down = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 7000        commanders up = [{3, 4188}, {4, 4188}, {5, 4188}]
+time = 7000      commanders down = [{3, 4188}, {4, 4188}, {5, 4188}]
+
+time = 8000 client requests seen = [{1, 2000}, {2, 2000}, {3, 2000}, {4, 2000}, {5, 2000}]
+time = 8000     db requests done = [{1, 4531}, {2, 4492}, {3, 4287}, {4, 4363}, {5, 4465}]
+time = 8000            scouts up = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 8000          scouts down = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 8000        commanders up = [{3, 4539}, {4, 4538}, {5, 4536}]
+time = 8000      commanders down = [{3, 4539}, {4, 4538}, {5, 4535}]
+
+time = 9000 client requests seen = [{1, 2000}, {2, 2000}, {3, 2000}, {4, 2000}, {5, 2000}]
+time = 9000     db requests done = [{1, 4800}, {2, 4807}, {3, 4630}, {4, 4670}, {5, 4853}]
+time = 9000            scouts up = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 9000          scouts down = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 9000        commanders up = [{3, 4860}, {4, 4857}, {5, 4862}]
+time = 9000      commanders down = [{3, 4860}, {4, 4857}, {5, 4859}]
+
+time = 10000 client requests seen = [{1, 2000}, {2, 2000}, {3, 2000}, {4, 2000}, {5, 2000}]
+time = 10000     db requests done = [{1, 5091}, {2, 5110}, {3, 4904}, {4, 4955}, {5, 5117}]
+time = 10000            scouts up = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 10000          scouts down = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 10000        commanders up = [{3, 5113}, {4, 5118}, {5, 5118}]
+time = 10000      commanders down = [{3, 5113}, {4, 5118}, {5, 5117}]
+
+time = 11000 client requests seen = [{1, 2000}, {2, 2000}, {3, 2000}, {4, 2000}, {5, 2000}]
+time = 11000     db requests done = [{1, 5325}, {2, 5362}, {3, 5204}, {4, 5286}, {5, 5370}]
+time = 11000            scouts up = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 11000          scouts down = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 11000        commanders up = [{3, 5371}, {4, 5371}, {5, 5371}]
+time = 11000      commanders down = [{3, 5371}, {4, 5371}, {5, 5371}]
+
+time = 12000 client requests seen = [{1, 2000}, {2, 2000}, {3, 2000}, {4, 2000}, {5, 2000}]
+time = 12000     db requests done = [{1, 5538}, {2, 5599}, {3, 5521}, {4, 5637}, {5, 5645}]
+time = 12000            scouts up = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 12000          scouts down = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 12000        commanders up = [{3, 5646}, {4, 5646}, {5, 5646}]
+time = 12000      commanders down = [{3, 5646}, {4, 5646}, {5, 5645}]
+
+time = 13000 client requests seen = [{1, 2000}, {2, 2000}, {3, 2000}, {4, 2000}, {5, 2000}]
+time = 13000     db requests done = [{1, 5727}, {2, 5814}, {3, 5786}, {4, 5889}, {5, 5897}]
+time = 13000            scouts up = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 13000          scouts down = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 13000        commanders up = [{3, 5898}, {4, 5899}, {5, 5899}]
+time = 13000      commanders down = [{3, 5898}, {4, 5899}, {5, 5898}]
+
+time = 14000 client requests seen = [{1, 2000}, {2, 2000}, {3, 2000}, {4, 2000}, {5, 2000}]
+time = 14000     db requests done = [{1, 5913}, {2, 6011}, {3, 5977}, {4, 6119}, {5, 6125}]
+time = 14000            scouts up = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 14000          scouts down = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 14000        commanders up = [{3, 6125}, {4, 6127}, {5, 6128}]
+time = 14000      commanders down = [{3, 6125}, {4, 6127}, {5, 6125}]
+
+time = 15000 client requests seen = [{1, 2000}, {2, 2000}, {3, 2000}, {4, 2000}, {5, 2000}]
+time = 15000     db requests done = [{1, 6049}, {2, 6165}, {3, 6196}, {4, 6354}, {5, 6362}]
+time = 15000            scouts up = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 15000          scouts down = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 15000        commanders up = [{3, 6362}, {4, 6363}, {5, 6363}]
+time = 15000      commanders down = [{3, 6362}, {4, 6363}, {5, 6363}]
+
+time = 16000 client requests seen = [{1, 2000}, {2, 2000}, {3, 2000}, {4, 2000}, {5, 2000}]
+time = 16000     db requests done = [{1, 6215}, {2, 6333}, {3, 6432}, {4, 6610}, {5, 6618}]
+time = 16000            scouts up = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 16000          scouts down = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 16000        commanders up = [{3, 6619}, {4, 6619}, {5, 6619}]
+time = 16000      commanders down = [{3, 6619}, {4, 6619}, {5, 6619}]
+
+time = 17000 client requests seen = [{1, 2000}, {2, 2000}, {3, 2000}, {4, 2000}, {5, 2000}]
+time = 17000     db requests done = [{1, 6360}, {2, 6479}, {3, 6597}, {4, 6821}, {5, 6829}]
+time = 17000            scouts up = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 17000          scouts down = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 17000        commanders up = [{3, 6829}, {4, 6830}, {5, 6830}]
+time = 17000      commanders down = [{3, 6829}, {4, 6830}, {5, 6830}]
+
+time = 18000 client requests seen = [{1, 2000}, {2, 2000}, {3, 2000}, {4, 2000}, {5, 2000}]
+time = 18000     db requests done = [{1, 6491}, {2, 6614}, {3, 6770}, {4, 7008}, {5, 7014}]
+time = 18000            scouts up = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 18000          scouts down = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 18000        commanders up = [{3, 7016}, {4, 7017}, {5, 7017}]
+time = 18000      commanders down = [{3, 7016}, {4, 7017}, {5, 7017}]
+
+time = 19000 client requests seen = [{1, 2000}, {2, 2000}, {3, 2000}, {4, 2000}, {5, 2000}]
+time = 19000     db requests done = [{1, 6591}, {2, 6728}, {3, 6914}, {4, 7066}, {5, 7066}]
+time = 19000            scouts up = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 19000          scouts down = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 19000        commanders up = [{3, 7066}, {4, 7066}, {5, 7066}]
+time = 19000      commanders down = [{3, 7066}, {4, 7066}, {5, 7066}]
+
+time = 20000 client requests seen = [{1, 2000}, {2, 2000}, {3, 2000}, {4, 2000}, {5, 2000}]
+time = 20000     db requests done = [{1, 6749}, {2, 6889}, {3, 7135}, {4, 7141}, {5, 7142}]
+time = 20000            scouts up = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 20000          scouts down = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 20000        commanders up = [{3, 7144}, {4, 7144}, {5, 7143}]
+time = 20000      commanders down = [{3, 7143}, {4, 7144}, {5, 7142}]
+
+time = 21000 client requests seen = [{1, 2000}, {2, 2000}, {3, 2000}, {4, 2000}, {5, 2000}]
+time = 21000     db requests done = [{1, 6842}, {2, 7018}, {3, 7275}, {4, 7282}, {5, 7283}]
+time = 21000            scouts up = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 21000          scouts down = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 21000        commanders up = [{3, 7285}, {4, 7284}, {5, 7284}]
+time = 21000      commanders down = [{3, 7285}, {4, 7284}, {5, 7284}]
+
+time = 22000 client requests seen = [{1, 2000}, {2, 2000}, {3, 2000}, {4, 2000}, {5, 2000}]
+time = 22000     db requests done = [{1, 6958}, {2, 7252}, {3, 7448}, {4, 7457}, {5, 7457}]
+time = 22000            scouts up = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 22000          scouts down = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 22000        commanders up = [{3, 7458}, {4, 7457}, {5, 7458}]
+time = 22000      commanders down = [{3, 7458}, {4, 7457}, {5, 7457}]
+
+time = 23000 client requests seen = [{1, 2000}, {2, 2000}, {3, 2000}, {4, 2000}, {5, 2000}]
+time = 23000     db requests done = [{1, 7124}, {2, 7468}, {3, 7601}, {4, 7610}, {5, 7610}]
+time = 23000            scouts up = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 23000          scouts down = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 23000        commanders up = [{3, 7611}, {4, 7610}, {5, 7611}]
+time = 23000      commanders down = [{3, 7611}, {4, 7610}, {5, 7611}]
+
+time = 24000 client requests seen = [{1, 2000}, {2, 2000}, {3, 2000}, {4, 2000}, {5, 2000}]
+time = 24000     db requests done = [{1, 7335}, {2, 7671}, {3, 7713}, {4, 7722}, {5, 7722}]
+time = 24000            scouts up = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 24000          scouts down = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 24000        commanders up = [{3, 7723}, {4, 7722}, {5, 7722}]
+time = 24000      commanders down = [{3, 7723}, {4, 7722}, {5, 7722}]
+
+time = 25000 client requests seen = [{1, 2000}, {2, 2000}, {3, 2000}, {4, 2000}, {5, 2000}]
+time = 25000     db requests done = [{1, 7510}, {2, 7848}, {3, 7806}, {4, 7851}, {5, 7855}]
+time = 25000            scouts up = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 25000          scouts down = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 25000        commanders up = [{3, 7857}, {4, 7857}, {5, 7857}]
+time = 25000      commanders down = [{3, 7857}, {4, 7857}, {5, 7857}]
+
+time = 26000 client requests seen = [{1, 2000}, {2, 2000}, {3, 2000}, {4, 2000}, {5, 2000}]
+time = 26000     db requests done = [{1, 7700}, {2, 8030}, {3, 7899}, {4, 8007}, {5, 8033}]
+time = 26000            scouts up = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 26000          scouts down = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 26000        commanders up = [{3, 8040}, {4, 8039}, {5, 8039}]
+time = 26000      commanders down = [{3, 8040}, {4, 8039}, {5, 8039}]
+
+time = 27000 client requests seen = [{1, 2000}, {2, 2000}, {3, 2000}, {4, 2000}, {5, 2000}]
+time = 27000     db requests done = [{1, 7873}, {2, 8199}, {3, 7995}, {4, 8186}, {5, 8207}]
+time = 27000            scouts up = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 27000          scouts down = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 27000        commanders up = [{3, 8208}, {4, 8208}, {5, 8209}]
+time = 27000      commanders down = [{3, 8208}, {4, 8208}, {5, 8208}]
+
+time = 28000 client requests seen = [{1, 2000}, {2, 2000}, {3, 2000}, {4, 2000}, {5, 2000}]
+time = 28000     db requests done = [{1, 8061}, {2, 8369}, {3, 8119}, {4, 8377}, {5, 8377}]
+time = 28000            scouts up = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 28000          scouts down = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 28000        commanders up = [{3, 8379}, {4, 8379}, {5, 8379}]
+time = 28000      commanders down = [{3, 8379}, {4, 8379}, {5, 8379}]
+
+time = 29000 client requests seen = [{1, 2000}, {2, 2000}, {3, 2000}, {4, 2000}, {5, 2000}]
+time = 29000     db requests done = [{1, 8362}, {2, 8417}, {3, 8313}, {4, 8417}, {5, 8417}]
+time = 29000            scouts up = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 29000          scouts down = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 29000        commanders up = [{3, 8417}, {4, 8417}, {5, 8417}]
+time = 29000      commanders down = [{3, 8417}, {4, 8417}, {5, 8417}]
+
+time = 30000 client requests seen = [{1, 2000}, {2, 2000}, {3, 2000}, {4, 2000}, {5, 2000}]
+time = 30000     db requests done = [{1, 8568}, {2, 8576}, {3, 8450}, {4, 8576}, {5, 8576}]
+time = 30000            scouts up = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 30000          scouts down = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 30000        commanders up = [{3, 8577}, {4, 8577}, {5, 8577}]
+time = 30000      commanders down = [{3, 8577}, {4, 8577}, {5, 8577}]
+
+time = 31000 client requests seen = [{1, 2000}, {2, 2000}, {3, 2000}, {4, 2000}, {5, 2000}]
+time = 31000     db requests done = [{1, 8777}, {2, 8785}, {3, 8575}, {4, 8785}, {5, 8785}]
+time = 31000            scouts up = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 31000          scouts down = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 31000        commanders up = [{3, 8786}, {4, 8786}, {5, 8786}]
+time = 31000      commanders down = [{3, 8786}, {4, 8786}, {5, 8786}]
+
+time = 32000 client requests seen = [{1, 2000}, {2, 2000}, {3, 2000}, {4, 2000}, {5, 2000}]
+time = 32000     db requests done = [{1, 8907}, {2, 8915}, {3, 8668}, {4, 8915}, {5, 8914}]
+time = 32000            scouts up = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 32000          scouts down = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 32000        commanders up = [{3, 8916}, {4, 8916}, {5, 8915}]
+time = 32000      commanders down = [{3, 8916}, {4, 8916}, {5, 8915}]
+
+time = 33000 client requests seen = [{1, 2000}, {2, 2000}, {3, 2000}, {4, 2000}, {5, 2000}]
+time = 33000     db requests done = [{1, 9058}, {2, 9066}, {3, 8773}, {4, 9066}, {5, 9066}]
+time = 33000            scouts up = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 33000          scouts down = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 33000        commanders up = [{3, 9068}, {4, 9068}, {5, 9068}]
+time = 33000      commanders down = [{3, 9068}, {4, 9068}, {5, 9067}]
+
+time = 34000 client requests seen = [{1, 2000}, {2, 2000}, {3, 2000}, {4, 2000}, {5, 2000}]
+time = 34000     db requests done = [{1, 9096}, {2, 9096}, {3, 8914}, {4, 9096}, {5, 9096}]
+time = 34000            scouts up = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 34000          scouts down = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 34000        commanders up = [{3, 9096}, {4, 9096}, {5, 9096}]
+time = 34000      commanders down = [{3, 9096}, {4, 9096}, {5, 9096}]
+
+time = 35000 client requests seen = [{1, 2000}, {2, 2000}, {3, 2000}, {4, 2000}, {5, 2000}]
+time = 35000     db requests done = [{1, 9130}, {2, 9130}, {3, 9121}, {4, 9130}, {5, 9130}]
+time = 35000            scouts up = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 35000          scouts down = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 35000        commanders up = [{3, 9130}, {4, 9130}, {5, 9130}]
+time = 35000      commanders down = [{3, 9130}, {4, 9130}, {5, 9130}]
+
+time = 36000 client requests seen = [{1, 2000}, {2, 2000}, {3, 2000}, {4, 2000}, {5, 2000}]
+time = 36000     db requests done = [{1, 9274}, {2, 9274}, {3, 9265}, {4, 9273}, {5, 9274}]
+time = 36000            scouts up = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 36000          scouts down = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 36000        commanders up = [{3, 9274}, {4, 9274}, {5, 9274}]
+time = 36000      commanders down = [{3, 9274}, {4, 9274}, {5, 9274}]
+
+time = 37000 client requests seen = [{1, 2000}, {2, 2000}, {3, 2000}, {4, 2000}, {5, 2000}]
+time = 37000     db requests done = [{1, 9436}, {2, 9436}, {3, 9427}, {4, 9436}, {5, 9436}]
+time = 37000            scouts up = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 37000          scouts down = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 37000        commanders up = [{3, 9437}, {4, 9437}, {5, 9437}]
+time = 37000      commanders down = [{3, 9437}, {4, 9437}, {5, 9436}]
+
+time = 38000 client requests seen = [{1, 2000}, {2, 2000}, {3, 2000}, {4, 2000}, {5, 2000}]
+time = 38000     db requests done = [{1, 9577}, {2, 9577}, {3, 9569}, {4, 9577}, {5, 9577}]
+time = 38000            scouts up = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 38000          scouts down = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 38000        commanders up = [{3, 9578}, {4, 9578}, {5, 9578}]
+time = 38000      commanders down = [{3, 9578}, {4, 9578}, {5, 9578}]
+
+time = 39000 client requests seen = [{1, 2000}, {2, 2000}, {3, 2000}, {4, 2000}, {5, 2000}]
+time = 39000     db requests done = [{1, 9695}, {2, 9695}, {3, 9686}, {4, 9695}, {5, 9695}]
+time = 39000            scouts up = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 39000          scouts down = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 39000        commanders up = [{3, 9696}, {4, 9695}, {5, 9696}]
+time = 39000      commanders down = [{3, 9696}, {4, 9695}, {5, 9696}]
+
+time = 40000 client requests seen = [{1, 2000}, {2, 2000}, {3, 2000}, {4, 2000}, {5, 2000}]
+time = 40000     db requests done = [{1, 9809}, {2, 9809}, {3, 9800}, {4, 9809}, {5, 9809}]
+time = 40000            scouts up = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 40000          scouts down = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 40000        commanders up = [{3, 9809}, {4, 9809}, {5, 9809}]
+time = 40000      commanders down = [{3, 9809}, {4, 9809}, {5, 9809}]
+
+time = 41000 client requests seen = [{1, 2000}, {2, 2000}, {3, 2000}, {4, 2000}, {5, 2000}]
+time = 41000     db requests done = [{1, 9931}, {2, 9931}, {3, 9922}, {4, 9931}, {5, 9931}]
+time = 41000            scouts up = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 41000          scouts down = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 41000        commanders up = [{3, 9932}, {4, 9931}, {5, 9931}]
+time = 41000      commanders down = [{3, 9932}, {4, 9931}, {5, 9931}]
+
+time = 42000 client requests seen = [{1, 2000}, {2, 2000}, {3, 2000}, {4, 2000}, {5, 2000}]
+time = 42000     db requests done = [{1, 10000}, {2, 10000}, {3, 10000}, {4, 10000}, {5, 10000}]
+time = 42000            scouts up = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 42000          scouts down = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 42000        commanders up = [{3, 10000}, {4, 10000}, {5, 10000}]
+time = 42000      commanders down = [{3, 10000}, {4, 10000}, {5, 10000}]
+
+time = 43000 client requests seen = [{1, 2000}, {2, 2000}, {3, 2000}, {4, 2000}, {5, 2000}]
+time = 43000     db requests done = [{1, 10000}, {2, 10000}, {3, 10000}, {4, 10000}, {5, 10000}]
+time = 43000            scouts up = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 43000          scouts down = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 43000        commanders up = [{3, 10000}, {4, 10000}, {5, 10000}]
+time = 43000      commanders down = [{3, 10000}, {4, 10000}, {5, 10000}]
+
+time = 44000 client requests seen = [{1, 2000}, {2, 2000}, {3, 2000}, {4, 2000}, {5, 2000}]
+time = 44000     db requests done = [{1, 10000}, {2, 10000}, {3, 10000}, {4, 10000}, {5, 10000}]
+time = 44000            scouts up = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 44000          scouts down = [{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}]
+time = 44000        commanders up = [{3, 10000}, {4, 10000}, {5, 10000}]
+time = 44000      commanders down = [{3, 10000}, {4, 10000}, {5, 10000}]
+
+^C

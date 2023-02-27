@@ -32,9 +32,9 @@ defmodule Configuration do
         line_num: 0,
         max_response_time: 50,
         min_timeout: 10,
-        max_timeout: 200,
-        decrease_amount: 20,
-        timeout_factor: 2
+        max_timeout: 150,
+        decrease_amount: 35,
+        timeout_factor: 1.5
       }
     )
   end
