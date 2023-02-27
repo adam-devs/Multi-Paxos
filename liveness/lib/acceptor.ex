@@ -2,9 +2,11 @@
 
 defmodule Acceptor do
   def start(config) do
+    ballot_num = {0, 0, self()}
+
     self = %{
       config: config,
-      ballot_num: {0, 0},
+      ballot_num: ballot_num,
       accepted: MapSet.new()
     }
 
@@ -44,16 +46,16 @@ defmodule Acceptor do
     next(self)
   end
 
-  defp ballot_gt(ballot, ballot_) do
-    {a1, b1} = ballot
-    {a2, b2} = ballot_
+  defp ballot_gt(ballot1, ballot2) do
+    {a1, b1, _} = ballot1
+    {a2, b2, _} = ballot2
 
     a1 > a2 or (a1 == a2 and b1 > b2)
   end
 
-  defp ballot_eq(ballot, ballot2) do
-    {a1, b1} = ballot
-    {a2, b2} = ballot2
+  defp ballot_eq(ballot1, ballot2) do
+    {a1, b1, _} = ballot1
+    {a2, b2, _} = ballot2
 
     a1 == a2 and b1 == b2
   end

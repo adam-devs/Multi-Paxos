@@ -29,7 +29,8 @@ defmodule Configuration do
         node_name: "#{node_type}#{node_num}",
         node_location: Helper.node_string(),
         # for ordering output lines
-        line_num: 0
+        line_num: 0,
+        max_response_time: 50
       }
     )
   end

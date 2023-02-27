@@ -47,9 +47,9 @@ defmodule Commander do
     end
   end
 
-  defp ballot_eq(ballot, ballot2) do
-    {a1, b1} = ballot
-    {a2, b2} = ballot2
+  defp ballot_eq(ballot1, ballot2) do
+    {a1, b1, _} = ballot1
+    {a2, b2, _} = ballot2
 
     a1 == a2 and b1 == b2
   end

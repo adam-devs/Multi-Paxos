@@ -23,7 +23,7 @@ defmodule Scout do
   def next(self) do
     receive do
       {:p1b, a, b1, r} ->
-        if b1 == self.ballot_num do
+        if ballot_eq(b1, self.ballot_num) do
           self = %{self | waitfor: List.delete(self.waitfor, a)}
           self = %{self | pvalues: MapSet.put(self.pvalues, r)}
 
@@ -40,5 +40,12 @@ defmodule Scout do
           send(self.config.monitor, {:SCOUT_FINISHED, self.config.node_num})
         end
     end
+  end
+
+  defp ballot_eq(ballot1, ballot2) do
+    {a1, b1, _} = ballot1
+    {a2, b2, _} = ballot2
+
+    a1 == a2 and b1 == b2
   end
 end
