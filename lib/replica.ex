@@ -201,10 +201,4 @@ defmodule Replica do
   defp get_proposals_for_slot(self, s) do
     for {^s, _c} = proposal <- self.proposals, do: proposal
   end
-
-  defp slot_in_not_decided?(self) do
-    slot_in = self.slot_in
-    decisions_for_slot_in = for {^slot_in, _c} = decision <- self.decisions, do: decision
-    length(decisions_for_slot_in) == 0
-  end
 end
